@@ -1,21 +1,69 @@
+"""
+LCD_1inch28.py - Driver for 1.28 inch Round LCD Display (240x240)
+
+This module provides a driver for the GC9A01 based 1.28 inch round LCD display.
+The display uses SPI communication and supports 16-bit RGB565 color format.
+
+Display Specifications:
+    - Resolution: 240x240 pixels
+    - Interface: SPI
+    - Color Format: RGB565 (16-bit)
+    - Controller: GC9A01
+
+Usage:
+    from lib import LCD_1inch28
+
+    lcd = LCD_1inch28.LCD_1inch28()
+    lcd.Init()
+    lcd.clear()
+    lcd.ShowImage(image)  # PIL Image object
+"""
 
 import time
 from . import lcdconfig
 
+
 class LCD_1inch28(lcdconfig.RaspberryPi):
+    """
+    Driver class for 1.28 inch round LCD display (GC9A01 controller).
+
+    Inherits from lcdconfig.RaspberryPi to access GPIO and SPI functionality.
+
+    Attributes:
+        width (int): Display width in pixels (240)
+        height (int): Display height in pixels (240)
+    """
 
     width = 240
-    height = 240 
+    height = 240
+
     def command(self, cmd):
+        """
+        Send a command byte to the LCD controller.
+
+        Args:
+            cmd (int): Command byte to send (0x00-0xFF)
+        """
         self.digital_write(self.DC_PIN, self.GPIO.LOW)
         self.spi_writebyte([cmd])
         
     def data(self, val):
+        """
+        Send a data byte to the LCD controller.
+
+        Args:
+            val (int): Data byte to send (0x00-0xFF)
+        """
         self.digital_write(self.DC_PIN, self.GPIO.HIGH)
         self.spi_writebyte([val])
         
     def reset(self):
-        """Reset the display"""
+        """
+        Perform a hardware reset of the display.
+
+        Toggles the reset pin HIGH -> LOW -> HIGH with 10ms delays
+        to reset the LCD controller to its initial state.
+        """
         self.GPIO.output(self.RST_PIN,self.GPIO.HIGH)
         time.sleep(0.01)
         self.GPIO.output(self.RST_PIN,self.GPIO.LOW)
@@ -24,7 +72,16 @@ class LCD_1inch28(lcdconfig.RaspberryPi):
         time.sleep(0.01)
         
     def Init(self):
-        """Initialize dispaly"""  
+        """
+        Initialize the LCD display.
+
+        Performs module initialization, hardware reset, and sends the
+        complete initialization sequence for the GC9A01 controller.
+        This configures power settings, gamma correction, display timing,
+        and enables the display.
+
+        Must be called before any other display operations.
+        """
         self.module_init()   
         self.reset()
         
@@ -264,7 +321,19 @@ class LCD_1inch28(lcdconfig.RaspberryPi):
         time.sleep(0.02)
   
     def SetWindows(self, Xstart, Ystart, Xend, Yend):
-        #set the X coordinates
+        """
+        Set the drawing window area on the display.
+
+        Defines the rectangular region where subsequent pixel data
+        will be written. Uses CASET (0x2A) and RASET (0x2B) commands.
+
+        Args:
+            Xstart (int): Starting X coordinate (0-239)
+            Ystart (int): Starting Y coordinate (0-239)
+            Xend (int): Ending X coordinate (1-240, exclusive)
+            Yend (int): Ending Y coordinate (1-240, exclusive)
+        """
+        # Set the X coordinates
         self.command(0x2A)
         self.data(0x00)               #Set the horizontal starting point to the high octet
         self.data(Xstart)      #Set the horizontal starting point to the low octet
@@ -280,9 +349,27 @@ class LCD_1inch28(lcdconfig.RaspberryPi):
 
         self.command(0x2C) 
         
-    def ShowImage(self,Image):
-        """Set buffer to value of Python Imaging Library image."""
-        """Write display buffer to physical display"""
+    def ShowImage(self, Image):
+        """
+        Display a PIL Image on the LCD.
+
+        Converts the image from RGB888 to RGB565 format and writes
+        the pixel data to the display via SPI in 4096-byte chunks.
+
+        Args:
+            Image (PIL.Image): A PIL Image object. Must be exactly
+                240x240 pixels in RGB mode.
+
+        Raises:
+            ValueError: If the image dimensions don't match the display
+                (240x240 pixels).
+
+        Note:
+            RGB565 conversion:
+            - Red: 5 bits (bits 15-11)
+            - Green: 6 bits (bits 10-5)
+            - Blue: 5 bits (bits 4-0)
+        """
         imwidth, imheight = Image.size
         if imwidth != self.width or imheight != self.height:
             raise ValueError('Image must be same dimensions as display \
@@ -298,7 +385,13 @@ class LCD_1inch28(lcdconfig.RaspberryPi):
             self.spi_writebyte(pix[i:i+4096])		
     
     def clear(self):
-        """Clear contents of image buffer"""
+        """
+        Clear the display to white.
+
+        Fills the entire display with white pixels (0xFF) by writing
+        a buffer of white pixel data to the full display area.
+        Data is sent in 4096-byte chunks via SPI.
+        """
         _buffer = [0xff]*(self.width * self.height * 2)
         self.SetWindows ( 0, 0, self.width, self.height)
         self.digital_write(self.DC_PIN,self.GPIO.HIGH)

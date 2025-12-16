@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 1100 750" xmlns="http://www.w3.org/2000/svg">
+    <title>Fyto Plant Monitor - Wiring Diagram</title>
+    <desc>Complete wiring diagram for the Fyto plant monitoring project showing connections between Raspberry Pi Zero 2W, ADS1115 ADC, 2" LCD Display, and sensors.</desc>
+
+    <!-- Background -->
+    <rect width="100%" height="100%" fill="#0f0f23"/>
+
+    <!-- Definitions -->
+    <defs>
+        <linearGradient id="piGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#2d5016"/>
+            <stop offset="100%" style="stop-color:#1a3009"/>
+        </linearGradient>
+        <linearGradient id="adsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1e1e3f"/>
+            <stop offset="100%" style="stop-color:#0f0f2a"/>
+        </linearGradient>
+        <linearGradient id="lcdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1a1a3e"/>
+            <stop offset="100%" style="stop-color:#0a0a1f"/>
+        </linearGradient>
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <style>
+            .title { font: bold 24px sans-serif; fill: #fff; }
+            .subtitle { font: 14px sans-serif; fill: #888; }
+            .component-title { font: bold 13px sans-serif; fill: #fff; }
+            .component-sub { font: 10px sans-serif; fill: #9ca3af; }
+            .pin-label { font: bold 8px sans-serif; fill: #fff; }
+            .pin-num { font: 8px sans-serif; fill: #888; }
+            .note { font: 9px sans-serif; fill: #a5b4fc; }
+            .legend-text { font: 10px sans-serif; fill: #d1d5db; }
+            .legend-title { font: bold 12px sans-serif; fill: #fff; }
+        </style>
+    </defs>
+
+    <!-- Title -->
+    <text x="550" y="35" text-anchor="middle" class="title">Fyto - Plant Monitor Wiring Diagram</text>
+    <text x="550" y="55" text-anchor="middle" class="subtitle">Raspberry Pi Zero 2W • ADS1115 ADC • 2" LCD • Environmental Sensors</text>
+
+    <!-- Power Rails -->
+    <rect x="50" y="75" width="1000" height="12" rx="3" fill="#dc2626" opacity="0.9"/>
+    <text x="60" y="85" fill="#fff" font-size="9" font-weight="bold">3.3V POWER RAIL</text>
+
+    <rect x="50" y="695" width="1000" height="12" rx="3" fill="#374151"/>
+    <text x="60" y="705" fill="#fff" font-size="9" font-weight="bold">GROUND RAIL</text>
+
+    <!-- ============================================ -->
+    <!-- Raspberry Pi Zero 2W -->
+    <!-- ============================================ -->
+    <g transform="translate(80, 110)">
+        <rect x="0" y="0" width="200" height="340" rx="10" fill="url(#piGrad)" stroke="#4a7c23" stroke-width="3"/>
+        <text x="100" y="28" text-anchor="middle" class="component-title">Raspberry Pi</text>
+        <text x="100" y="45" text-anchor="middle" class="component-sub">Zero 2W</text>
+
+        <!-- GPIO Header background -->
+        <rect x="55" y="60" width="90" height="265" rx="5" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+
+        <!-- Pin rows - showing only used pins with labels -->
+        <!-- Left Column (Odd pins) -->
+
+        <!-- Pin 1 - 3V3 Power -->
+        <rect x="62" y="68" width="35" height="20" rx="3" fill="#dc2626"/>
+        <text x="80" y="82" text-anchor="middle" class="pin-label">3V3</text>
+        <text x="52" y="82" text-anchor="end" class="pin-num">1</text>
+
+        <!-- Pin 3 - SDA -->
+        <rect x="62" y="93" width="35" height="20" rx="3" fill="#2563eb"/>
+        <text x="80" y="107" text-anchor="middle" class="pin-label">SDA</text>
+        <text x="52" y="107" text-anchor="end" class="pin-num">3</text>
+
+        <!-- Pin 5 - SCL -->
+        <rect x="62" y="118" width="35" height="20" rx="3" fill="#f97316"/>
+        <text x="80" y="132" text-anchor="middle" class="pin-label">SCL</text>
+        <text x="52" y="132" text-anchor="end" class="pin-num">5</text>
+
+        <!-- Pin 7 (unused) -->
+        <rect x="62" y="143" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="52" y="157" text-anchor="end" class="pin-num">7</text>
+
+        <!-- Pin 9 - GND -->
+        <rect x="62" y="168" width="35" height="20" rx="3" fill="#374151" stroke="#4b5563"/>
+        <text x="80" y="182" text-anchor="middle" class="pin-label">GND</text>
+        <text x="52" y="182" text-anchor="end" class="pin-num">9</text>
+
+        <!-- Pins 11-17 (unused) -->
+        <rect x="62" y="193" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="52" y="207" text-anchor="end" class="pin-num">11</text>
+        <rect x="62" y="218" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="52" y="232" text-anchor="end" class="pin-num">13</text>
+        <rect x="62" y="243" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="52" y="257" text-anchor="end" class="pin-num">15</text>
+        <rect x="62" y="268" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="52" y="282" text-anchor="end" class="pin-num">17</text>
+
+        <!-- Pin 19 - BL (Backlight) -->
+        <rect x="62" y="293" width="35" height="20" rx="3" fill="#06b6d4"/>
+        <text x="80" y="307" text-anchor="middle" class="pin-label">BL</text>
+        <text x="52" y="307" text-anchor="end" class="pin-num">19</text>
+
+        <!-- Right Column (Even pins) -->
+
+        <!-- Pin 2 - 5V (not used) -->
+        <rect x="103" y="68" width="35" height="20" rx="3" fill="#991b1b" stroke="#7f1d1d"/>
+        <text x="121" y="82" text-anchor="middle" class="pin-label" fill="#fca5a5">5V</text>
+        <text x="148" y="82" class="pin-num">2</text>
+
+        <!-- Pins 4-20 (unused shown dimmed) -->
+        <rect x="103" y="93" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="107" class="pin-num">4</text>
+        <rect x="103" y="118" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="132" class="pin-num">6</text>
+        <rect x="103" y="143" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="157" class="pin-num">8</text>
+        <rect x="103" y="168" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="182" class="pin-num">10</text>
+        <rect x="103" y="193" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="207" class="pin-num">12</text>
+        <rect x="103" y="218" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="232" class="pin-num">14</text>
+        <rect x="103" y="243" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="257" class="pin-num">16</text>
+        <rect x="103" y="268" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="282" class="pin-num">18</text>
+        <rect x="103" y="293" width="35" height="20" rx="3" fill="#333" stroke="#444"/>
+        <text x="148" y="307" class="pin-num">20</text>
+
+        <!-- Additional pins section -->
+        <!-- Pin 21 - MOSI -->
+        <rect x="20" y="335" width="40" height="45" rx="3" fill="#22c55e"/>
+        <text x="40" y="355" text-anchor="middle" class="pin-label">MOSI</text>
+        <text x="40" y="370" text-anchor="middle" class="pin-num">Pin 21</text>
+
+        <!-- Pin 23 - SCLK -->
+        <rect x="65" y="335" width="40" height="45" rx="3" fill="#7c3aed"/>
+        <text x="85" y="355" text-anchor="middle" class="pin-label">SCLK</text>
+        <text x="85" y="370" text-anchor="middle" class="pin-num">Pin 23</text>
+
+        <!-- Pin 24 - CE0 -->
+        <rect x="110" y="335" width="35" height="45" rx="3" fill="#92400e"/>
+        <text x="127" y="355" text-anchor="middle" class="pin-label">CE0</text>
+        <text x="127" y="370" text-anchor="middle" class="pin-num">Pin 24</text>
+
+        <!-- Pin 36 - RST -->
+        <rect x="150" y="335" width="35" height="45" rx="3" fill="#ec4899"/>
+        <text x="167" y="355" text-anchor="middle" class="pin-label">RST</text>
+        <text x="167" y="370" text-anchor="middle" class="pin-num">Pin 36</text>
+
+        <!-- Pin 37 - DC (shown separately) -->
+        <rect x="20" y="385" width="35" height="35" rx="3" fill="#6b7280"/>
+        <text x="37" y="402" text-anchor="middle" class="pin-label">DC</text>
+        <text x="37" y="415" text-anchor="middle" class="pin-num">Pin 37</text>
+    </g>
+
+    <!-- ============================================ -->
+    <!-- ADS1115 ADC -->
+    <!-- ============================================ -->
+    <g transform="translate(380, 130)">
+        <rect x="0" y="0" width="180" height="220" rx="8" fill="url(#adsGrad)" stroke="#4f46e5" stroke-width="2"/>
+        <text x="90" y="28" text-anchor="middle" class="component-title">ADS1115</text>
+        <text x="90" y="45" text-anchor="middle" class="component-sub">16-bit ADC Converter</text>
+
+        <!-- IC chip representation -->
+        <rect x="55" y="60" width="70" height="90" rx="4" fill="#1a1a1a" stroke="#4f46e5" stroke-width="1"/>
+        <circle cx="70" cy="72" r="4" fill="#333"/>
+
+        <!-- Left side pins -->
+        <rect x="15" y="65" width="40" height="18" rx="2" fill="#dc2626"/>
+        <text x="35" y="78" text-anchor="middle" class="pin-label">VDD</text>
+
+        <rect x="15" y="88" width="40" height="18" rx="2" fill="#374151"/>
+        <text x="35" y="101" text-anchor="middle" class="pin-label">GND</text>
+
+        <rect x="15" y="111" width="40" height="18" rx="2" fill="#f97316"/>
+        <text x="35" y="124" text-anchor="middle" class="pin-label">SCL</text>
+
+        <rect x="15" y="134" width="40" height="18" rx="2" fill="#2563eb"/>
+        <text x="35" y="147" text-anchor="middle" class="pin-label">SDA</text>
+
+        <!-- Right side pins (Analog inputs) -->
+        <rect x="125" y="65" width="40" height="18" rx="2" fill="#555"/>
+        <text x="145" y="78" text-anchor="middle" class="pin-label">A0</text>
+
+        <rect x="125" y="88" width="40" height="18" rx="2" fill="#ef4444"/>
+        <text x="145" y="101" text-anchor="middle" class="pin-label">A1</text>
+
+        <rect x="125" y="111" width="40" height="18" rx="2" fill="#3b82f6"/>
+        <text x="145" y="124" text-anchor="middle" class="pin-label">A2</text>
+
+        <rect x="125" y="134" width="40" height="18" rx="2" fill="#eab308"/>
+        <text x="145" y="147" text-anchor="middle" class="pin-label">A3</text>
+
+        <!-- Channel labels -->
+        <text x="90" y="175" text-anchor="middle" class="note">Channel Assignments:</text>
+        <text x="90" y="190" text-anchor="middle" class="note">A0 = Open (unused)</text>
+        <text x="90" y="203" text-anchor="middle" class="note">A1 = LM35 Temperature</text>
+        <text x="90" y="216" text-anchor="middle" class="note">A2 = Moisture Sensor</text>
+        <text x="90" y="229" text-anchor="middle" class="note">A3 = LDR Light Sensor</text>
+    </g>
+
+    <!-- ============================================ -->
+    <!-- LCD Display -->
+    <!-- ============================================ -->
+    <g transform="translate(380, 400)">
+        <rect x="0" y="0" width="180" height="270" rx="8" fill="url(#lcdGrad)" stroke="#06b6d4" stroke-width="2"/>
+        <text x="90" y="25" text-anchor="middle" class="component-title">2" IPS LCD Display</text>
+        <text x="90" y="42" text-anchor="middle" class="component-sub">240×320 RGB (SPI Interface)</text>
+
+        <!-- Screen representation -->
+        <rect x="30" y="55" width="120" height="150" rx="6" fill="#000" stroke="#333" stroke-width="4"/>
+        <text x="90" y="140" text-anchor="middle" font-size="50">😊</text>
+
+        <!-- Pin labels - Top row -->
+        <rect x="10" y="215" width="35" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="27" y="228" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">VCC</text>
+
+        <rect x="50" y="215" width="35" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="67" y="228" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">GND</text>
+
+        <rect x="90" y="215" width="35" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="107" y="228" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">DIN</text>
+
+        <rect x="130" y="215" width="40" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="150" y="228" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">CLK</text>
+
+        <!-- Pin labels - Bottom row -->
+        <rect x="10" y="240" width="35" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="27" y="253" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">CS</text>
+
+        <rect x="50" y="240" width="35" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="67" y="253" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">DC</text>
+
+        <rect x="90" y="240" width="35" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="107" y="253" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">RST</text>
+
+        <rect x="130" y="240" width="40" height="20" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+        <text x="150" y="253" text-anchor="middle" fill="#67e8f9" font-size="8" font-weight="bold">BL</text>
+    </g>
+
+    <!-- ============================================ -->
+    <!-- Sensors -->
+    <!-- ============================================ -->
+
+    <!-- LM35 Temperature Sensor -->
+    <g transform="translate(680, 130)">
+        <rect x="0" y="0" width="160" height="110" rx="8" fill="#1f1f1f" stroke="#ef4444" stroke-width="2"/>
+        <text x="80" y="25" text-anchor="middle" class="component-title">LM35</text>
+        <text x="80" y="42" text-anchor="middle" class="component-sub">Temperature Sensor (Analog)</text>
+
+        <!-- TO-92 package -->
+        <path d="M 50 55 Q 80 48 110 55 L 110 80 Q 80 88 50 80 Z" fill="#1a1a1a" stroke="#ef4444"/>
+        <text x="80" y="72" text-anchor="middle" fill="#888" font-size="8">TO-92</text>
+
+        <!-- Pins -->
+        <rect x="20" y="88" width="35" height="16" rx="2" fill="#dc2626"/>
+        <text x="37" y="100" text-anchor="middle" class="pin-label">VCC</text>
+
+        <rect x="62" y="88" width="35" height="16" rx="2" fill="#f97316"/>
+        <text x="80" y="100" text-anchor="middle" class="pin-label">OUT</text>
+
+        <rect x="104" y="88" width="35" height="16" rx="2" fill="#374151"/>
+        <text x="122" y="100" text-anchor="middle" class="pin-label">GND</text>
+    </g>
+
+    <!-- Moisture Sensor -->
+    <g transform="translate(680, 270)">
+        <rect x="0" y="0" width="160" height="110" rx="8" fill="#1f1f1f" stroke="#3b82f6" stroke-width="2"/>
+        <text x="80" y="25" text-anchor="middle" class="component-title">Capacitive Moisture</text>
+        <text x="80" y="42" text-anchor="middle" class="component-sub">Soil Moisture Sensor</text>
+
+        <!-- Sensor probe -->
+        <rect x="60" y="50" width="40" height="30" rx="3" fill="#1a1a1a" stroke="#3b82f6"/>
+        <rect x="70" y="80" width="20" height="8" fill="#3b82f6"/>
+
+        <!-- Pins -->
+        <rect x="20" y="88" width="35" height="16" rx="2" fill="#dc2626"/>
+        <text x="37" y="100" text-anchor="middle" class="pin-label">VCC</text>
+
+        <rect x="62" y="88" width="35" height="16" rx="2" fill="#22c55e"/>
+        <text x="80" y="100" text-anchor="middle" class="pin-label">OUT</text>
+
+        <rect x="104" y="88" width="35" height="16" rx="2" fill="#374151"/>
+        <text x="122" y="100" text-anchor="middle" class="pin-label">GND</text>
+    </g>
+
+    <!-- LDR Light Sensor -->
+    <g transform="translate(680, 410)">
+        <rect x="0" y="0" width="160" height="110" rx="8" fill="#1f1f1f" stroke="#eab308" stroke-width="2"/>
+        <text x="80" y="25" text-anchor="middle" class="component-title">LDR Module</text>
+        <text x="80" y="42" text-anchor="middle" class="component-sub">Light Dependent Resistor</text>
+
+        <!-- LDR symbol -->
+        <circle cx="80" cy="63" r="18" fill="#1a1a1a" stroke="#eab308" stroke-width="2"/>
+        <path d="M 68 63 Q 80 53 92 63 Q 80 73 68 63" fill="none" stroke="#eab308" stroke-width="2"/>
+        <line x1="95" y1="50" x2="105" y2="45" stroke="#eab308" stroke-width="1.5"/>
+        <line x1="98" y1="58" x2="108" y2="53" stroke="#eab308" stroke-width="1.5"/>
+
+        <!-- Pins -->
+        <rect x="20" y="88" width="35" height="16" rx="2" fill="#dc2626"/>
+        <text x="37" y="100" text-anchor="middle" class="pin-label">VCC</text>
+
+        <rect x="62" y="88" width="35" height="16" rx="2" fill="#eab308"/>
+        <text x="80" y="100" text-anchor="middle" class="pin-label">OUT</text>
+
+        <rect x="104" y="88" width="35" height="16" rx="2" fill="#374151"/>
+        <text x="122" y="100" text-anchor="middle" class="pin-label">GND</text>
+    </g>
+
+    <!-- ============================================ -->
+    <!-- WIRING CONNECTIONS -->
+    <!-- ============================================ -->
+
+    <!-- Power connections (red) to 3.3V rail -->
+    <g stroke="#dc2626" stroke-width="3" fill="none" filter="url(#glow)">
+        <!-- Pi 3V3 to power rail -->
+        <path d="M 160 178 L 160 87"/>
+        <!-- ADS VDD to power rail -->
+        <path d="M 415 204 L 415 87"/>
+        <!-- LCD VCC to power rail -->
+        <path d="M 407 615 L 407 580 L 340 580 L 340 87"/>
+        <!-- LM35 VCC to power rail -->
+        <path d="M 717 228 L 717 87"/>
+        <!-- Moisture VCC to power rail -->
+        <path d="M 717 368 L 717 300 L 760 300 L 760 87"/>
+        <!-- LDR VCC to power rail -->
+        <path d="M 717 508 L 717 470 L 800 470 L 800 87"/>
+    </g>
+
+    <!-- Ground connections (dark gray) to ground rail -->
+    <g stroke="#4b5563" stroke-width="3" fill="none">
+        <!-- Pi GND to ground rail -->
+        <path d="M 160 288 L 160 695"/>
+        <!-- ADS GND to ground rail -->
+        <path d="M 415 227 L 415 260 L 360 260 L 360 695"/>
+        <!-- LCD GND to ground rail -->
+        <path d="M 447 615 L 447 640 L 400 640 L 400 695"/>
+        <!-- LM35 GND to ground rail -->
+        <path d="M 802 228 L 802 250 L 870 250 L 870 695"/>
+        <!-- Moisture GND to ground rail -->
+        <path d="M 802 368 L 802 390 L 910 390 L 910 695"/>
+        <!-- LDR GND to ground rail -->
+        <path d="M 802 508 L 802 530 L 950 530 L 950 695"/>
+    </g>
+
+    <!-- I2C connections -->
+    <!-- SDA (blue) - Pi Pin 3 to ADS SDA -->
+    <path d="M 177 213 L 300 213 L 300 264 L 415 264" stroke="#2563eb" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- SCL (orange) - Pi Pin 5 to ADS SCL -->
+    <path d="M 177 238 L 320 238 L 320 241 L 415 241" stroke="#f97316" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- SPI connections to LCD -->
+    <!-- MOSI (green) - Pi Pin 21 to LCD DIN -->
+    <path d="M 120 455 L 120 550 L 290 550 L 290 620 L 477 620" stroke="#22c55e" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- SCLK (purple) - Pi Pin 23 to LCD CLK -->
+    <path d="M 165 455 L 165 565 L 310 565 L 310 630 L 530 630" stroke="#7c3aed" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- CE0 (brown) - Pi Pin 24 to LCD CS -->
+    <path d="M 207 455 L 207 540 L 330 540 L 330 650 L 407 650" stroke="#92400e" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- DC (gray) - Pi Pin 37 to LCD DC -->
+    <path d="M 117 530 L 117 575 L 350 575 L 350 660 L 447 660" stroke="#6b7280" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- RST (pink) - Pi Pin 36 to LCD RST -->
+    <path d="M 247 455 L 247 520 L 370 520 L 370 665 L 487 665" stroke="#ec4899" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- BL (cyan) - Pi Pin 19 to LCD BL -->
+    <path d="M 177 413 L 310 413 L 310 505 L 545 505 L 545 660" stroke="#06b6d4" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- Sensor signal connections to ADS1115 -->
+    <!-- LM35 OUT to A1 -->
+    <path d="M 760 226 L 610 226 L 610 218 L 560 218" stroke="#ef4444" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- Moisture OUT to A2 -->
+    <path d="M 760 366 L 630 366 L 630 241 L 560 241" stroke="#3b82f6" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- LDR OUT to A3 -->
+    <path d="M 760 506 L 650 506 L 650 264 L 560 264" stroke="#eab308" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+    <!-- Connection destination labels -->
+    <g font-size="9" fill="#888">
+        <text x="575" y="213">→ A1</text>
+        <text x="575" y="238">→ A2</text>
+        <text x="575" y="260">→ A3</text>
+    </g>
+
+    <!-- ============================================ -->
+    <!-- Legend -->
+    <!-- ============================================ -->
+    <g transform="translate(870, 130)">
+        <rect x="0" y="0" width="175" height="340" rx="8" fill="#1a1a2e" stroke="#333"/>
+        <text x="87" y="25" text-anchor="middle" class="legend-title">Wire Colors</text>
+
+        <!-- Legend items -->
+        <rect x="15" y="40" width="30" height="6" rx="2" fill="#dc2626"/>
+        <text x="55" y="47" class="legend-text">3.3V Power</text>
+
+        <rect x="15" y="58" width="30" height="6" rx="2" fill="#374151" stroke="#4b5563"/>
+        <text x="55" y="65" class="legend-text">Ground</text>
+
+        <rect x="15" y="76" width="30" height="6" rx="2" fill="#2563eb"/>
+        <text x="55" y="83" class="legend-text">I2C SDA</text>
+
+        <rect x="15" y="94" width="30" height="6" rx="2" fill="#f97316"/>
+        <text x="55" y="101" class="legend-text">I2C SCL</text>
+
+        <rect x="15" y="112" width="30" height="6" rx="2" fill="#22c55e"/>
+        <text x="55" y="119" class="legend-text">SPI MOSI</text>
+
+        <rect x="15" y="130" width="30" height="6" rx="2" fill="#7c3aed"/>
+        <text x="55" y="137" class="legend-text">SPI SCLK</text>
+
+        <rect x="15" y="148" width="30" height="6" rx="2" fill="#92400e"/>
+        <text x="55" y="155" class="legend-text">SPI CS</text>
+
+        <rect x="15" y="166" width="30" height="6" rx="2" fill="#6b7280"/>
+        <text x="55" y="173" class="legend-text">LCD DC</text>
+
+        <rect x="15" y="184" width="30" height="6" rx="2" fill="#ec4899"/>
+        <text x="55" y="191" class="legend-text">LCD RST</text>
+
+        <rect x="15" y="202" width="30" height="6" rx="2" fill="#06b6d4"/>
+        <text x="55" y="209" class="legend-text">LCD BL</text>
+
+        <rect x="15" y="220" width="30" height="6" rx="2" fill="#ef4444"/>
+        <text x="55" y="227" class="legend-text">Temp Signal</text>
+
+        <rect x="15" y="238" width="30" height="6" rx="2" fill="#3b82f6"/>
+        <text x="55" y="245" class="legend-text">Moisture Sig</text>
+
+        <rect x="15" y="256" width="30" height="6" rx="2" fill="#eab308"/>
+        <text x="55" y="263" class="legend-text">Light Signal</text>
+
+        <!-- Notes section -->
+        <line x1="10" y1="280" x2="165" y2="280" stroke="#333"/>
+        <text x="87" y="298" text-anchor="middle" font-size="9" fill="#fca5a5" font-weight="bold">⚠️ IMPORTANT</text>
+        <text x="15" y="315" font-size="8" fill="#9ca3af">Use LM35 (analog)</text>
+        <text x="15" y="328" font-size="8" fill="#9ca3af">NOT DS18B20 (digital)</text>
+    </g>
+
+    <!-- Footer -->
+    <text x="550" y="735" text-anchor="middle" font-size="10" fill="#666">
+        Fyto Plant Monitor - github.com/CodersCafeTech/Fyto - Wiring matches code configuration
+    </text>
+</svg>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fyto - Transform your houseplant into an interactive pet with emotion displays based on environmental sensors">
+    <title>Fyto - Turn Your Plant Into a Pet</title>
+    <style>
+        :root {
+            --primary: #00d4aa;
+            --secondary: #7c3aed;
+            --dark-bg: #0f0f23;
+            --darker-bg: #1a1a2e;
+            --card-bg: #16213e;
+            --text: #fff;
+            --text-muted: #888;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 100%);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(124, 58, 237, 0.1));
+            border-bottom: 2px solid rgba(0, 212, 170, 0.3);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+
+        .hero-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 212, 170, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .emotions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .emotion-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .emotion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .emotion-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .emotion-icon img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .emotion-card:hover .emotion-icon {
+            transform: scale(1.1);
+        }
+
+        .emotion-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .emotion-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .wiring-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: transparent;
+        }
+
+        .diagram-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .diagram-content {
+            display: none;
+        }
+
+        .diagram-content.active {
+            display: block;
+        }
+
+        .diagram-embed {
+            width: 100%;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .feature-desc {
+            color: var(--text-muted);
+        }
+
+        .hardware-list {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hardware-list ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .hardware-list li {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .hardware-list li strong {
+            color: var(--primary);
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .alert-title {
+            color: var(--danger);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert ul {
+            margin-left: 20px;
+            color: var(--text-muted);
+        }
+
+        .alert li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #e9ecef;
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        /* Bash syntax highlighting */
+        .code-block .comment { color: #6c757d; font-style: italic; }
+        .code-block .command { color: #4fc3f7; font-weight: 600; }
+        .code-block .path { color: #66bb6a; }
+        .code-block .flag { color: #ffa726; }
+
+        footer {
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 20px;
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .link-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .link-icon {
+            font-size: 2rem;
+        }
+
+        .link-content h3 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .link-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .link-content a {
+            color: var(--primary);
+            text-decoration: underline;
+            display: inline;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-emoji">🌱</div>
+        <h1>Fyto</h1>
+        <p>Transform your houseplant into an interactive pet with emotions that respond to environmental conditions</p>
+        <div class="hero-buttons">
+            <a href="https://github.com/CodersCafeTech/Fyto" class="btn btn-primary">
+                <span>📦</span> View on GitHub
+            </a>
+            <a href="#wiring" class="btn btn-secondary">
+                <span>🔌</span> See Wiring Diagrams
+            </a>
+            <a href="https://www.instructables.com/Fytó-Turn-Your-Plant-Into-Pet/" class="btn btn-secondary">
+                <span>📖</span> Full Tutorial
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Video Section -->
+        <section class="section">
+            <h2 class="section-title">See Fyto in Action</h2>
+            <p class="section-subtitle">Watch how Fyto brings your plant to life</p>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/zNNZdUzXV7M?si=4XNrWzwaSvSSQ0cT" title="Fyto - Turn Your Plant Into a Pet" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </section>
+
+        <!-- Six Emotions Section -->
+        <section class="section">
+            <h2 class="section-title">Six Expressive Emotions</h2>
+            <p class="section-subtitle">Fyto displays different emotions based on real-time sensor data<br>
+            <span style="font-size: 0.9rem; color: var(--primary);">💡 Hover over each emotion to see the animated display!</span></p>
+
+            <div class="emotions-grid">
+                <div class="emotion-card">
+                    <div class="emotion-icon">
+                        <img src="assets/happy.gif" alt="Happy emotion animation">
+                    </div>
+                    <div class="emotion-name">Happy</div>
+                    <div class="emotion-desc">Optimal conditions - perfect environment!</div>
+                </div>
+                <div class="emotion-card">
+                    <div class="emotion-icon">
+                        <img src="assets/sleepy.gif" alt="Sleepy emotion animation">
+                    </div>
+                    <div class="emotion-name">Sleepy</div>
+                    <div class="emotion-desc">Low light detected (&lt; 20%)</div>
+                </div>
+                <div class="emotion-card">
+                    <div class="emotion-icon">
+                        <img src="assets/hot.gif" alt="Hot emotion animation">
+                    </div>
+                    <div class="emotion-name">Hot</div>
+                    <div class="emotion-desc">Temperature above 30°C</div>
+                </div>
+                <div class="emotion-card">
+                    <div class="emotion-icon">
+                        <img src="assets/freeze.gif" alt="Freeze emotion animation">
+                    </div>
+                    <div class="emotion-name">Freeze</div>
+                    <div class="emotion-desc">Temperature below 22°C</div>
+                </div>
+                <div class="emotion-card">
+                    <div class="emotion-icon">
+                        <img src="assets/savory.gif" alt="Savory emotion animation">
+                    </div>
+                    <div class="emotion-name">Savory</div>
+                    <div class="emotion-desc">Recently watered - moisture rising</div>
+                </div>
+                <div class="emotion-card">
+                    <div class="emotion-icon">
+                        <img src="assets/thirsty.gif" alt="Thirsty emotion animation">
+                    </div>
+                    <div class="emotion-name">Thirsty</div>
+                    <div class="emotion-desc">Soil moisture &lt; 10% - needs water!</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Wiring Diagrams Section -->
+        <section class="section" id="wiring">
+            <h2 class="section-title">Wiring Diagrams</h2>
+            <p class="section-subtitle">Complete visual guides for assembling your Fyto</p>
+
+            <div class="wiring-tabs">
+                <button class="tab-btn active" onclick="showDiagram('detailed')">Detailed Guide</button>
+                <button class="tab-btn" onclick="showDiagram('wiring')">Wiring Diagram</button>
+                <button class="tab-btn" onclick="showDiagram('schematic')">Circuit Schematic</button>
+                <button class="tab-btn" onclick="showDiagram('pinout')">Pinout Reference</button>
+            </div>
+
+            <!-- Detailed Diagram -->
+            <div id="diagram-detailed" class="diagram-content active">
+                <div class="diagram-container">
+                    <iframe src="wiring-diagram.html" class="diagram-embed" style="height: 800px;"></iframe>
+                </div>
+            </div>
+
+            <!-- Wiring SVG -->
+            <div id="diagram-wiring" class="diagram-content">
+                <div class="diagram-container">
+                    <object data="diagrams/fyto-wiring.svg" type="image/svg+xml" class="diagram-embed" style="height: 750px;">
+                        <img src="diagrams/fyto-wiring.svg" alt="Fyto Wiring Diagram">
+                    </object>
+                </div>
+            </div>
+
+            <!-- Schematic -->
+            <div id="diagram-schematic" class="diagram-content">
+                <div class="diagram-container">
+                    <object data="diagrams/fyto_schematic.svg" type="image/svg+xml" class="diagram-embed" style="height: 600px;">
+                        <img src="diagrams/fyto_schematic.svg" alt="Fyto Circuit Schematic">
+                    </object>
+                </div>
+            </div>
+
+            <!-- Pinout -->
+            <div id="diagram-pinout" class="diagram-content">
+                <div class="diagram-container">
+                    <object data="diagrams/fyto_pinout.svg" type="image/svg+xml" class="diagram-embed" style="height: 800px;">
+                        <img src="diagrams/fyto_pinout.svg" alt="Fyto Pinout Reference">
+                    </object>
+                </div>
+            </div>
+        </section>
+
+        <!-- Important Notes -->
+        <section class="section">
+            <div class="alert">
+                <div class="alert-title">
+                    <span>⚠️</span> Important Setup Notes
+                </div>
+                <ul>
+                    <li><strong>Use LM35, NOT DS18B20:</strong> The code requires an analog temperature sensor. DS18B20 is digital and won't work without modifications.</li>
+                    <li><strong>Logic Level Converter Recommended:</strong> Use a 5V to 3.3V bi-directional converter to protect your Pi's GPIO pins.</li>
+                    <li><strong>Enable I2C:</strong> Run <code>sudo raspi-config</code> → Interface Options → I2C → Enable. Also disable Serial.</li>
+                    <li><strong>Channel Assignment:</strong> The original tutorial has different ADC channel assignments. Our wiring matches the actual code: A1=Temperature, A2=Moisture, A3=Light.</li>
+                    <li><strong>Calibrate Sensors:</strong> Use <code>calibration.py</code> to test each sensor individually before final assembly.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Hardware Requirements -->
+        <section class="section">
+            <h2 class="section-title">Hardware Requirements</h2>
+            <p class="section-subtitle">Everything you need to build Fyto</p>
+
+            <div class="hardware-list">
+                <h3 style="margin-bottom: 20px; color: var(--primary);">Core Components</h3>
+                <ul>
+                    <li><strong>Raspberry Pi Zero 2W</strong> - Main controller (1GHz quad-core)</li>
+                    <li><strong>2" IPS LCD Display (240×320)</strong> - For emotion animations</li>
+                    <li><strong>ADS1115 16-bit ADC</strong> - Analog-to-digital converter</li>
+                    <li><strong>LM35 Temperature Sensor</strong> - Analog temp sensor (TO-92 package)</li>
+                    <li><strong>Capacitive Soil Moisture Sensor</strong> - Corrosion-resistant</li>
+                    <li><strong>LDR Light Sensor Module</strong> - Ambient light detection</li>
+                    <li><strong>5V 2A Power Adapter</strong> - Power supply</li>
+                    <li><strong>Micro USB Power Module</strong> - Breadboard power distribution</li>
+                    <li><strong>30AWG Silicone Wires (5m)</strong> - Flexible wiring</li>
+                    <li><strong>Logic Level Converter (5V ↔ 3.3V)</strong> - GPIO protection (highly recommended)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="section">
+            <h2 class="section-title">Key Features</h2>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Animated Emotions</h3>
+                    <p class="feature-desc">180 frames per emotion create smooth, engaging animations on the vibrant IPS LCD display</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Real-Time Monitoring</h3>
+                    <p class="feature-desc">Continuous sensor readings for temperature, moisture, and light levels</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3 class="feature-title">I2C & SPI</h3>
+                    <p class="feature-desc">Uses both I2C (sensors) and SPI (display) for efficient communication</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🐍</div>
+                    <h3 class="feature-title">Python Powered</h3>
+                    <p class="feature-desc">Easy-to-modify Python code using Adafruit libraries</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌡️</div>
+                    <h3 class="feature-title">Multi-Sensor</h3>
+                    <p class="feature-desc">Temperature, moisture, and light sensors work together to assess plant health</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🖨️</div>
+                    <h3 class="feature-title">3D Printable Case</h3>
+                    <p class="feature-desc">Custom-designed planter case with STL files included</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section class="section">
+            <h2 class="section-title">Quick Start</h2>
+
+            <div class="code-block">
+                <pre><span class="comment"># Clone the repository</span>
+<span class="command">git</span> clone https://github.com/CodersCafeTech/Fyto.git
+<span class="command">cd</span> <span class="path">Fyto</span>
+
+<span class="comment"># Install dependencies</span>
+<span class="command">sudo apt-get</span> update
+<span class="command">sudo apt-get</span> install python3-pip python3-pil python3-numpy
+<span class="command">pip3</span> install adafruit-circuitpython-ads1x15 spidev
+
+<span class="comment"># Enable I2C</span>
+<span class="command">sudo raspi-config</span>
+<span class="comment"># Navigate to: Interface Options → I2C → Enable</span>
+
+<span class="comment"># Calibrate sensors</span>
+<span class="command">cd</span> <span class="path">Code</span>
+<span class="command">python3</span> calibration.py
+
+<span class="comment"># Run Fyto (two terminals)</span>
+<span class="comment"># Terminal 1:</span>
+<span class="command">python3</span> main.py
+
+<span class="comment"># Terminal 2:</span>
+<span class="command">python3</span> sensors.py</pre>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section class="section">
+            <h2 class="section-title">Resources & Links</h2>
+
+            <a href="https://github.com/CodersCafeTech/Fyto" class="link-card">
+                <div class="link-icon">📦</div>
+                <div class="link-content">
+                    <h3>GitHub Repository</h3>
+                    <p>Complete source code, 3D files, and emotion animations</p>
+                </div>
+            </a>
+
+            <a href="https://www.instructables.com/Fytó-Turn-Your-Plant-Into-Pet/" class="link-card">
+                <div class="link-icon">📖</div>
+                <div class="link-content">
+                    <h3>Instructables Tutorial</h3>
+                    <p>Original step-by-step build guide with photos</p>
+                </div>
+            </a>
+                
+            <a href="https://www.facebook.com/groups/267376998981798/permalink/267377018981796" class="link-card">
+                <div class="link-icon">👥</div>
+                <div class="link-content">
+                    <h3>Fytó - DIY Smart planter</h3>
+                    <p>Official Facebook Group</p>
+                </div>
+            </a>
+
+            <a href="wiring-diagram.html" class="link-card">
+                <div class="link-icon">🔌</div>
+                <div class="link-content">
+                    <h3>Detailed Wiring Guide</h3>
+                    <p>Full-page wiring diagram with connection tables</p>
+                </div>
+            </a>
+                
+            <a href="./stl/fyto-stl-files.zip" class="link-card">
+                <div class="link-icon">🖨️</div>
+                <div class="link-content">
+                    <h3>Download STL files</h3>
+                    <p>Courtesy of <span>theoldelement</span>.</p>
+                </div>
+            </a>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Fyto - Plant Monitor Project</p>
+        <p>Original project by <a href="https://github.com/CodersCafeTech">Coders Cafe</a></p>
+        <p style="margin-top: 20px; font-size: 0.9rem;">
+            <a href="https://github.com/CodersCafeTech/Fyto">GitHub</a> •
+            <a href="https://www.instructables.com/Fytó-Turn-Your-Plant-Into-Pet/">Instructables</a> •
+            <a href="https://github.com/CodersCafeTech/Fyto/blob/main/LICENSE.md">License</a>
+        </p>
+    </footer>
+
+    <script>
+        function showDiagram(type) {
+            // Hide all diagrams
+            document.querySelectorAll('.diagram-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            // Remove active state from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected diagram
+            document.getElementById('diagram-' + type).classList.add('active');
+
+            // Add active state to clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

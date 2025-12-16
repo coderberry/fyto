@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fyto - Wiring Diagram</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00d4aa, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .diagram-container {
+            background: #0f0f23;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+        }
+
+        .breadboard-view {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+
+        /* Component Styles */
+        .component {
+            position: relative;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .component-label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .component-sublabel {
+            font-size: 0.7rem;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        /* Raspberry Pi Zero */
+        .pi-zero {
+            background: linear-gradient(145deg, #2d5016, #1a3009);
+            border: 2px solid #4a7c23;
+            width: 280px;
+            min-height: 400px;
+        }
+
+        .pi-header {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4px;
+            background: #1a1a1a;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .pin {
+            width: 28px;
+            height: 24px;
+            background: #333;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            color: #888;
+            cursor: help;
+            transition: all 0.2s;
+            border: 1px solid #444;
+        }
+
+        .pin:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .pin.active {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .pin.power { background: #dc2626; border-color: #ef4444; }
+        .pin.ground { background: #1f2937; border-color: #374151; }
+        .pin.i2c { background: #2563eb; border-color: #3b82f6; }
+        .pin.spi { background: #7c3aed; border-color: #8b5cf6; }
+        .pin.gpio { background: #059669; border-color: #10b981; }
+
+        /* ADS1115 */
+        .ads1115 {
+            background: linear-gradient(145deg, #1e1e3f, #0f0f2a);
+            border: 2px solid #4f46e5;
+            width: 200px;
+        }
+
+        .ads-pins {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .ads-pin {
+            padding: 8px;
+            background: #252550;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid #4f46e5;
+        }
+
+        .ads-pin.vdd { border-color: #dc2626; color: #fca5a5; }
+        .ads-pin.gnd { border-color: #374151; color: #9ca3af; }
+        .ads-pin.i2c { border-color: #2563eb; color: #93c5fd; }
+        .ads-pin.analog { border-color: #f59e0b; color: #fcd34d; }
+
+        /* LCD Display */
+        .lcd-display {
+            background: linear-gradient(145deg, #1a1a3e, #0a0a1f);
+            border: 2px solid #06b6d4;
+            width: 180px;
+        }
+
+        .lcd-screen {
+            width: 120px;
+            height: 160px;
+            background: linear-gradient(135deg, #000 0%, #111 100%);
+            border: 3px solid #333;
+            border-radius: 8px;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .lcd-pins {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin-top: 10px;
+        }
+
+        .lcd-pin {
+            padding: 6px 4px;
+            background: #1a1a3e;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            border: 1px solid #06b6d4;
+            color: #67e8f9;
+        }
+
+        /* Sensors */
+        .sensors-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sensor {
+            background: linear-gradient(145deg, #1f1f1f, #0f0f0f);
+            border: 2px solid #666;
+            border-radius: 8px;
+            padding: 15px;
+            width: 160px;
+        }
+
+        .sensor.temp { border-color: #ef4444; }
+        .sensor.moisture { border-color: #3b82f6; }
+        .sensor.light { border-color: #eab308; }
+
+        .sensor-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .sensor-pins {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .sensor-pin {
+            padding: 4px 8px;
+            background: #333;
+            border-radius: 3px;
+            font-size: 0.7rem;
+        }
+
+        /* Wire Connections Legend */
+        .legend {
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .legend h3 {
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            background: #0f0f23;
+            border-radius: 6px;
+        }
+
+        .wire-sample {
+            width: 40px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .wire-red { background: #dc2626; }
+        .wire-black { background: #1f2937; border: 1px solid #374151; }
+        .wire-blue { background: #2563eb; }
+        .wire-orange { background: #f97316; }
+        .wire-green { background: #22c55e; }
+        .wire-purple { background: #7c3aed; }
+        .wire-brown { background: #92400e; }
+        .wire-gray { background: #6b7280; }
+        .wire-pink { background: #ec4899; }
+        .wire-cyan { background: #06b6d4; }
+        .wire-yellow { background: #eab308; }
+
+        /* Connection Tables */
+        .connections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .connection-table {
+            background: #1a1a2e;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .connection-table h3 {
+            background: linear-gradient(90deg, #7c3aed, #2563eb);
+            padding: 15px;
+            font-size: 1rem;
+        }
+
+        .connection-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .connection-table th,
+        .connection-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #2a2a4a;
+        }
+
+        .connection-table th {
+            background: #0f0f23;
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .connection-table tr:hover {
+            background: #252550;
+        }
+
+        .wire-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        /* Important Notes */
+        .notes {
+            background: linear-gradient(135deg, #7c3aed20, #dc262620);
+            border: 1px solid #7c3aed;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .notes h3 {
+            color: #c4b5fd;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notes ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .notes li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #d1d5db;
+        }
+
+        .notes li::before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+        }
+
+        /* SVG Wiring Diagram */
+        .svg-diagram {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #7c3aed, #2563eb);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fullscreen-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+        }
+
+        .fullscreen-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Fullscreen mode styles */
+        body:fullscreen {
+            overflow: auto;
+        }
+
+        body:-webkit-full-screen {
+            overflow: auto;
+        }
+
+        body:-moz-full-screen {
+            overflow: auto;
+        }
+
+        body:-ms-fullscreen {
+            overflow: auto;
+        }
+
+        @media (max-width: 768px) {
+            .breadboard-view {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+        <span id="fullscreen-icon">⛶</span>
+        <span id="fullscreen-text">Fullscreen</span>
+    </button>
+
+    <div class="container">
+        <h1>🌱 Fyto Wiring Diagram</h1>
+        <p class="subtitle">Turn Your Plant Into a Pet - Complete Wiring Guide</p>
+
+        <!-- SVG Wiring Diagram -->
+        <div class="diagram-container">
+            <svg class="svg-diagram" viewBox="0 0 1100 700" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background -->
+                <defs>
+                    <linearGradient id="piGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#2d5016"/>
+                        <stop offset="100%" style="stop-color:#1a3009"/>
+                    </linearGradient>
+                    <linearGradient id="adsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1e1e3f"/>
+                        <stop offset="100%" style="stop-color:#0f0f2a"/>
+                    </linearGradient>
+                    <linearGradient id="lcdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1a1a3e"/>
+                        <stop offset="100%" style="stop-color:#0a0a1f"/>
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                        <feMerge>
+                            <feMergeNode in="coloredBlur"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+                <!-- Power Rails -->
+                <rect x="50" y="30" width="1000" height="15" rx="3" fill="#dc2626" opacity="0.8"/>
+                <text x="60" y="42" fill="#fff" font-size="10" font-weight="bold">3.3V POWER RAIL</text>
+
+                <rect x="50" y="655" width="1000" height="15" rx="3" fill="#374151"/>
+                <text x="60" y="667" fill="#fff" font-size="10" font-weight="bold">GROUND RAIL</text>
+
+                <!-- Raspberry Pi Zero 2W -->
+                <g transform="translate(80, 80)">
+                    <rect x="0" y="0" width="200" height="320" rx="10" fill="url(#piGrad)" stroke="#4a7c23" stroke-width="3"/>
+                    <text x="100" y="25" fill="#fff" font-size="14" font-weight="bold" text-anchor="middle">Raspberry Pi</text>
+                    <text x="100" y="42" fill="#9ca3af" font-size="11" text-anchor="middle">Zero 2W</text>
+
+                    <!-- GPIO Header -->
+                    <rect x="60" y="55" width="80" height="250" rx="5" fill="#1a1a1a" stroke="#333"/>
+
+                    <!-- Pin rows - Left side (odd) -->
+                    <g font-size="8" fill="#fff">
+                        <!-- Pin 1 - 3V3 -->
+                        <rect x="65" y="62" width="30" height="18" rx="2" fill="#dc2626"/>
+                        <text x="80" y="74" text-anchor="middle" font-weight="bold">3V3</text>
+                        <text x="55" y="74" text-anchor="end" fill="#888">1</text>
+
+                        <!-- Pin 3 - SDA -->
+                        <rect x="65" y="85" width="30" height="18" rx="2" fill="#2563eb"/>
+                        <text x="80" y="97" text-anchor="middle" font-weight="bold">SDA</text>
+                        <text x="55" y="97" text-anchor="end" fill="#888">3</text>
+
+                        <!-- Pin 5 - SCL -->
+                        <rect x="65" y="108" width="30" height="18" rx="2" fill="#f97316"/>
+                        <text x="80" y="120" text-anchor="middle" font-weight="bold">SCL</text>
+                        <text x="55" y="120" text-anchor="end" fill="#888">5</text>
+
+                        <!-- Pin 9 - GND -->
+                        <rect x="65" y="154" width="30" height="18" rx="2" fill="#374151"/>
+                        <text x="80" y="166" text-anchor="middle" font-weight="bold">GND</text>
+                        <text x="55" y="166" text-anchor="end" fill="#888">9</text>
+
+                        <!-- Pin 19 - BL (GPIO10) -->
+                        <rect x="65" y="223" width="30" height="18" rx="2" fill="#06b6d4"/>
+                        <text x="80" y="235" text-anchor="middle" font-weight="bold">BL</text>
+                        <text x="55" y="235" text-anchor="end" fill="#888">19</text>
+
+                        <!-- Pin 21 - MOSI -->
+                        <rect x="65" y="246" width="30" height="18" rx="2" fill="#22c55e"/>
+                        <text x="80" y="258" text-anchor="middle" font-weight="bold">MOSI</text>
+                        <text x="55" y="258" text-anchor="end" fill="#888">21</text>
+
+                        <!-- Pin 23 - SCLK -->
+                        <rect x="65" y="269" width="30" height="18" rx="2" fill="#7c3aed"/>
+                        <text x="80" y="281" text-anchor="middle" font-weight="bold">SCLK</text>
+                        <text x="55" y="281" text-anchor="end" fill="#888">23</text>
+
+                        <!-- Right side pins (even) -->
+                        <!-- Pin 2 - 5V -->
+                        <rect x="105" y="62" width="30" height="18" rx="2" fill="#991b1b"/>
+                        <text x="120" y="74" text-anchor="middle">5V</text>
+                        <text x="145" y="74" fill="#888">2</text>
+
+                        <!-- Pin 24 - CE0 -->
+                        <rect x="105" y="269" width="30" height="18" rx="2" fill="#92400e"/>
+                        <text x="120" y="281" text-anchor="middle" font-weight="bold">CE0</text>
+                        <text x="145" y="281" fill="#888">24</text>
+
+                        <!-- Pin 36 - RST (GPIO16) -->
+                        <rect x="65" y="292" width="30" height="18" rx="2" fill="#ec4899"/>
+                        <text x="80" y="304" text-anchor="middle" font-weight="bold">RST</text>
+                        <text x="55" y="304" text-anchor="end" fill="#888">36</text>
+
+                        <!-- Pin 37 - DC (GPIO26) -->
+                        <rect x="105" y="292" width="30" height="18" rx="2" fill="#6b7280"/>
+                        <text x="120" y="304" text-anchor="middle" font-weight="bold">DC</text>
+                        <text x="145" y="304" fill="#888">37</text>
+                    </g>
+                </g>
+
+                <!-- ADS1115 ADC -->
+                <g transform="translate(420, 120)">
+                    <rect x="0" y="0" width="160" height="200" rx="8" fill="url(#adsGrad)" stroke="#4f46e5" stroke-width="2"/>
+                    <text x="80" y="25" fill="#fff" font-size="13" font-weight="bold" text-anchor="middle">ADS1115</text>
+                    <text x="80" y="42" fill="#9ca3af" font-size="10" text-anchor="middle">16-bit ADC</text>
+
+                    <!-- Chip representation -->
+                    <rect x="50" y="55" width="60" height="80" rx="3" fill="#1a1a1a" stroke="#4f46e5"/>
+
+                    <!-- Left pins -->
+                    <rect x="20" y="60" width="35" height="16" rx="2" fill="#dc2626"/>
+                    <text x="37" y="72" fill="#fff" font-size="9" text-anchor="middle">VDD</text>
+
+                    <rect x="20" y="80" width="35" height="16" rx="2" fill="#374151"/>
+                    <text x="37" y="92" fill="#fff" font-size="9" text-anchor="middle">GND</text>
+
+                    <rect x="20" y="100" width="35" height="16" rx="2" fill="#f97316"/>
+                    <text x="37" y="112" fill="#fff" font-size="9" text-anchor="middle">SCL</text>
+
+                    <rect x="20" y="120" width="35" height="16" rx="2" fill="#2563eb"/>
+                    <text x="37" y="132" fill="#fff" font-size="9" text-anchor="middle">SDA</text>
+
+                    <!-- Right pins (Analog inputs) -->
+                    <rect x="105" y="60" width="35" height="16" rx="2" fill="#6b7280"/>
+                    <text x="122" y="72" fill="#fff" font-size="9" text-anchor="middle">A0</text>
+                    <text x="122" y="82" fill="#888" font-size="7" text-anchor="middle">(open)</text>
+
+                    <rect x="105" y="85" width="35" height="16" rx="2" fill="#ef4444"/>
+                    <text x="122" y="97" fill="#fff" font-size="9" text-anchor="middle">A1</text>
+
+                    <rect x="105" y="110" width="35" height="16" rx="2" fill="#3b82f6"/>
+                    <text x="122" y="122" fill="#fff" font-size="9" text-anchor="middle">A2</text>
+
+                    <rect x="105" y="135" width="35" height="16" rx="2" fill="#eab308"/>
+                    <text x="122" y="147" fill="#fff" font-size="9" text-anchor="middle">A3</text>
+
+                    <!-- Labels -->
+                    <text x="80" y="175" fill="#a5b4fc" font-size="8" text-anchor="middle">A1=Temp | A2=Moisture | A3=Light</text>
+                </g>
+
+                <!-- LCD Display -->
+                <g transform="translate(420, 380)">
+                    <rect x="0" y="0" width="160" height="250" rx="8" fill="url(#lcdGrad)" stroke="#06b6d4" stroke-width="2"/>
+                    <text x="80" y="22" fill="#fff" font-size="12" font-weight="bold" text-anchor="middle">2" IPS LCD</text>
+                    <text x="80" y="38" fill="#9ca3af" font-size="9" text-anchor="middle">240×320 Display</text>
+
+                    <!-- Screen -->
+                    <rect x="25" y="50" width="110" height="140" rx="5" fill="#000" stroke="#333" stroke-width="3"/>
+                    <text x="80" y="125" fill="#fff" font-size="40" text-anchor="middle">😊</text>
+
+                    <!-- Pin labels -->
+                    <g font-size="8" fill="#67e8f9">
+                        <rect x="10" y="200" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="25" y="210" text-anchor="middle">VCC</text>
+
+                        <rect x="45" y="200" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="60" y="210" text-anchor="middle">GND</text>
+
+                        <rect x="80" y="200" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="95" y="210" text-anchor="middle">DIN</text>
+
+                        <rect x="115" y="200" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="130" y="210" text-anchor="middle">CLK</text>
+
+                        <rect x="10" y="220" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="25" y="230" text-anchor="middle">CS</text>
+
+                        <rect x="45" y="220" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="60" y="230" text-anchor="middle">DC</text>
+
+                        <rect x="80" y="220" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="95" y="230" text-anchor="middle">RST</text>
+
+                        <rect x="115" y="220" width="30" height="14" rx="2" fill="#1a1a3e" stroke="#06b6d4"/>
+                        <text x="130" y="230" text-anchor="middle">BL</text>
+                    </g>
+                </g>
+
+                <!-- Sensors -->
+                <!-- LM35 Temperature Sensor -->
+                <g transform="translate(700, 100)">
+                    <rect x="0" y="0" width="140" height="100" rx="8" fill="#1f1f1f" stroke="#ef4444" stroke-width="2"/>
+                    <text x="70" y="22" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">🌡️ LM35</text>
+                    <text x="70" y="38" fill="#9ca3af" font-size="9" text-anchor="middle">Temperature Sensor</text>
+
+                    <!-- TO-92 package representation -->
+                    <path d="M 45 50 Q 70 45 95 50 L 95 75 Q 70 80 45 75 Z" fill="#1a1a1a" stroke="#ef4444"/>
+
+                    <g font-size="8">
+                        <rect x="15" y="82" width="30" height="14" rx="2" fill="#dc2626"/>
+                        <text x="30" y="92" fill="#fff" text-anchor="middle">VCC</text>
+
+                        <rect x="55" y="82" width="30" height="14" rx="2" fill="#f97316"/>
+                        <text x="70" y="92" fill="#fff" text-anchor="middle">OUT</text>
+
+                        <rect x="95" y="82" width="30" height="14" rx="2" fill="#374151"/>
+                        <text x="110" y="92" fill="#fff" text-anchor="middle">GND</text>
+                    </g>
+                </g>
+
+                <!-- Moisture Sensor -->
+                <g transform="translate(700, 230)">
+                    <rect x="0" y="0" width="140" height="100" rx="8" fill="#1f1f1f" stroke="#3b82f6" stroke-width="2"/>
+                    <text x="70" y="22" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">💧 Capacitive</text>
+                    <text x="70" y="38" fill="#9ca3af" font-size="9" text-anchor="middle">Moisture Sensor</text>
+
+                    <!-- Sensor probe representation -->
+                    <rect x="55" y="45" width="30" height="30" rx="3" fill="#1a1a1a" stroke="#3b82f6"/>
+                    <rect x="60" y="75" width="20" height="5" fill="#3b82f6"/>
+
+                    <g font-size="8">
+                        <rect x="15" y="82" width="30" height="14" rx="2" fill="#dc2626"/>
+                        <text x="30" y="92" fill="#fff" text-anchor="middle">VCC</text>
+
+                        <rect x="55" y="82" width="30" height="14" rx="2" fill="#22c55e"/>
+                        <text x="70" y="92" fill="#fff" text-anchor="middle">OUT</text>
+
+                        <rect x="95" y="82" width="30" height="14" rx="2" fill="#374151"/>
+                        <text x="110" y="92" fill="#fff" text-anchor="middle">GND</text>
+                    </g>
+                </g>
+
+                <!-- LDR Light Sensor -->
+                <g transform="translate(700, 360)">
+                    <rect x="0" y="0" width="140" height="100" rx="8" fill="#1f1f1f" stroke="#eab308" stroke-width="2"/>
+                    <text x="70" y="22" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">☀️ LDR Module</text>
+                    <text x="70" y="38" fill="#9ca3af" font-size="9" text-anchor="middle">Light Sensor</text>
+
+                    <!-- LDR representation -->
+                    <circle cx="70" cy="58" r="15" fill="#1a1a1a" stroke="#eab308" stroke-width="2"/>
+                    <path d="M 60 58 Q 70 50 80 58 Q 70 66 60 58" fill="none" stroke="#eab308" stroke-width="2"/>
+
+                    <g font-size="8">
+                        <rect x="15" y="82" width="30" height="14" rx="2" fill="#dc2626"/>
+                        <text x="30" y="92" fill="#fff" text-anchor="middle">VCC</text>
+
+                        <rect x="55" y="82" width="30" height="14" rx="2" fill="#eab308"/>
+                        <text x="70" y="92" fill="#fff" text-anchor="middle">OUT</text>
+
+                        <rect x="95" y="82" width="30" height="14" rx="2" fill="#374151"/>
+                        <text x="110" y="92" fill="#fff" text-anchor="middle">GND</text>
+                    </g>
+                </g>
+
+                <!-- WIRING CONNECTIONS -->
+                <!-- Power connections (red) -->
+                <g stroke="#dc2626" stroke-width="3" fill="none" filter="url(#glow)">
+                    <!-- Pi 3V3 to power rail -->
+                    <path d="M 145 142 L 145 45"/>
+                    <!-- ADS VDD to power rail -->
+                    <path d="M 457 188 L 457 45"/>
+                    <!-- LCD VCC to power rail -->
+                    <path d="M 435 580 L 435 550 L 350 550 L 350 45"/>
+                    <!-- LM35 VCC to power rail -->
+                    <path d="M 715 196 L 715 45"/>
+                    <!-- Moisture VCC to power rail -->
+                    <path d="M 715 326 L 715 250 L 750 250 L 750 45"/>
+                    <!-- LDR VCC to power rail -->
+                    <path d="M 715 456 L 715 430 L 780 430 L 780 45"/>
+                </g>
+
+                <!-- Ground connections (dark gray) -->
+                <g stroke="#4b5563" stroke-width="3" fill="none">
+                    <!-- Pi GND to ground rail -->
+                    <path d="M 145 234 L 145 655"/>
+                    <!-- ADS GND to ground rail -->
+                    <path d="M 457 208 L 457 250 L 400 250 L 400 655"/>
+                    <!-- LCD GND to ground rail -->
+                    <path d="M 480 580 L 480 600 L 450 600 L 450 655"/>
+                    <!-- LM35 GND to ground rail -->
+                    <path d="M 825 196 L 825 220 L 870 220 L 870 655"/>
+                    <!-- Moisture GND to ground rail -->
+                    <path d="M 825 326 L 825 350 L 900 350 L 900 655"/>
+                    <!-- LDR GND to ground rail -->
+                    <path d="M 825 456 L 825 480 L 930 480 L 930 655"/>
+                </g>
+
+                <!-- I2C connections -->
+                <!-- SDA (blue) - Pi to ADS -->
+                <path d="M 175 165 L 300 165 L 300 248 L 457 248" stroke="#2563eb" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- SCL (orange) - Pi to ADS -->
+                <path d="M 175 188 L 320 188 L 320 228 L 457 228" stroke="#f97316" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- SPI connections to LCD -->
+                <!-- MOSI (green) - Pin 21 to DIN -->
+                <path d="M 175 326 L 250 326 L 250 500 L 515 500" stroke="#22c55e" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- SCLK (purple) - Pin 23 to CLK -->
+                <path d="M 175 349 L 270 349 L 270 520 L 550 520" stroke="#7c3aed" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- CE0 (brown) - Pin 24 to CS -->
+                <path d="M 215 349 L 290 349 L 290 540 L 435 540 L 435 600" stroke="#92400e" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- DC (gray) - Pin 37 to DC -->
+                <path d="M 215 372 L 310 372 L 310 560 L 465 560 L 465 600" stroke="#6b7280" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- RST (pink) - Pin 36 to RST -->
+                <path d="M 145 372 L 145 400 L 330 400 L 330 580 L 495 580 L 495 600" stroke="#ec4899" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- BL (cyan) - Pin 19 to BL -->
+                <path d="M 145 303 L 145 290 L 350 290 L 350 420 L 545 420 L 545 600" stroke="#06b6d4" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- Sensor signal connections to ADS1115 -->
+                <!-- LM35 OUT to A1 (red/orange) -->
+                <path d="M 770 196 L 640 196 L 640 213 L 580 213" stroke="#ef4444" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- Moisture OUT to A2 (blue/green) -->
+                <path d="M 770 326 L 660 326 L 660 238 L 580 238" stroke="#3b82f6" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- LDR OUT to A3 (yellow) -->
+                <path d="M 770 456 L 680 456 L 680 263 L 580 263" stroke="#eab308" stroke-width="3" fill="none" filter="url(#glow)"/>
+
+                <!-- Labels for wire destinations -->
+                <g font-size="9" fill="#888">
+                    <text x="600" y="208">← A1 (Temp)</text>
+                    <text x="600" y="233">← A2 (Moisture)</text>
+                    <text x="600" y="258">← A3 (Light)</text>
+                </g>
+
+            </svg>
+        </div>
+
+        <!-- Connection Tables -->
+        <div class="connections">
+            <div class="connection-table">
+                <h3>📺 LCD Display → Raspberry Pi</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>LCD Pin</th>
+                            <th>Wire</th>
+                            <th>Pi Pin</th>
+                            <th>GPIO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VCC</td>
+                            <td><span class="wire-indicator" style="background:#dc2626"></span>Red</td>
+                            <td>Pin 1</td>
+                            <td>3.3V</td>
+                        </tr>
+                        <tr>
+                            <td>GND</td>
+                            <td><span class="wire-indicator" style="background:#374151"></span>Black</td>
+                            <td>Pin 9</td>
+                            <td>Ground</td>
+                        </tr>
+                        <tr>
+                            <td>DIN</td>
+                            <td><span class="wire-indicator" style="background:#22c55e"></span>Green</td>
+                            <td>Pin 21</td>
+                            <td>GPIO 9 (MOSI)</td>
+                        </tr>
+                        <tr>
+                            <td>CLK</td>
+                            <td><span class="wire-indicator" style="background:#7c3aed"></span>Purple</td>
+                            <td>Pin 23</td>
+                            <td>GPIO 11 (SCLK)</td>
+                        </tr>
+                        <tr>
+                            <td>CS</td>
+                            <td><span class="wire-indicator" style="background:#92400e"></span>Brown</td>
+                            <td>Pin 24</td>
+                            <td>GPIO 8 (CE0)</td>
+                        </tr>
+                        <tr>
+                            <td>DC</td>
+                            <td><span class="wire-indicator" style="background:#6b7280"></span>Gray</td>
+                            <td>Pin 37</td>
+                            <td>GPIO 26</td>
+                        </tr>
+                        <tr>
+                            <td>RST</td>
+                            <td><span class="wire-indicator" style="background:#ec4899"></span>Pink</td>
+                            <td>Pin 36</td>
+                            <td>GPIO 16</td>
+                        </tr>
+                        <tr>
+                            <td>BL</td>
+                            <td><span class="wire-indicator" style="background:#06b6d4"></span>Cyan</td>
+                            <td>Pin 19</td>
+                            <td>GPIO 10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="connection-table">
+                <h3>📊 ADS1115 ADC → Raspberry Pi</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ADS Pin</th>
+                            <th>Wire</th>
+                            <th>Pi Pin</th>
+                            <th>GPIO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>VDD</td>
+                            <td><span class="wire-indicator" style="background:#dc2626"></span>Red</td>
+                            <td>Pin 1</td>
+                            <td>3.3V</td>
+                        </tr>
+                        <tr>
+                            <td>GND</td>
+                            <td><span class="wire-indicator" style="background:#374151"></span>Black</td>
+                            <td>Pin 9</td>
+                            <td>Ground</td>
+                        </tr>
+                        <tr>
+                            <td>SCL</td>
+                            <td><span class="wire-indicator" style="background:#f97316"></span>Orange</td>
+                            <td>Pin 5</td>
+                            <td>GPIO 3 (SCL)</td>
+                        </tr>
+                        <tr>
+                            <td>SDA</td>
+                            <td><span class="wire-indicator" style="background:#2563eb"></span>Blue</td>
+                            <td>Pin 3</td>
+                            <td>GPIO 2 (SDA)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="connection-table">
+                <h3>🌡️💧☀️ Sensors → ADS1115</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sensor</th>
+                            <th>Sensor Pin</th>
+                            <th>Connects To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="3" style="background:#ef444420">LM35 (Temp)</td>
+                            <td>VCC</td>
+                            <td>3.3V Rail</td>
+                        </tr>
+                        <tr>
+                            <td>OUT</td>
+                            <td><strong>ADS1115 A1</strong></td>
+                        </tr>
+                        <tr>
+                            <td>GND</td>
+                            <td>Ground Rail</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3" style="background:#3b82f620">Moisture</td>
+                            <td>VCC</td>
+                            <td>3.3V Rail</td>
+                        </tr>
+                        <tr>
+                            <td>OUT</td>
+                            <td><strong>ADS1115 A2</strong></td>
+                        </tr>
+                        <tr>
+                            <td>GND</td>
+                            <td>Ground Rail</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3" style="background:#eab30820">LDR (Light)</td>
+                            <td>VCC</td>
+                            <td>3.3V Rail</td>
+                        </tr>
+                        <tr>
+                            <td>OUT</td>
+                            <td><strong>ADS1115 A3</strong></td>
+                        </tr>
+                        <tr>
+                            <td>GND</td>
+                            <td>Ground Rail</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Wire Color Legend -->
+        <div class="legend">
+            <h3>🎨 Wire Color Reference</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="wire-sample wire-red"></div>
+                    <span>Red - 3.3V Power</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-black"></div>
+                    <span>Black - Ground</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-blue"></div>
+                    <span>Blue - I2C SDA</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-orange"></div>
+                    <span>Orange - I2C SCL</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-green"></div>
+                    <span>Green - SPI MOSI</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-purple"></div>
+                    <span>Purple - SPI SCLK</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-brown"></div>
+                    <span>Brown - SPI CS (CE0)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-gray"></div>
+                    <span>Gray - LCD DC</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-pink"></div>
+                    <span>Pink - LCD Reset</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-cyan"></div>
+                    <span>Cyan - LCD Backlight</span>
+                </div>
+                <div class="legend-item">
+                    <div class="wire-sample wire-yellow"></div>
+                    <span>Yellow - LDR Signal</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="notes">
+            <h3>⚡ Important Wiring Notes</h3>
+            <ul>
+                <li><strong>Use a Logic Level Converter!</strong> The Pi's GPIO runs at 3.3V. If any sensor outputs 5V, use a bi-directional level converter to avoid damaging the Pi.</li>
+                <li><strong>Use the LM35, NOT DS18B20.</strong> The code requires an analog temperature sensor. The DS18B20 is digital and won't work without code modifications.</li>
+                <li><strong>Check ADS1115 channel assignments.</strong> The original Instructables diagram shows different channels. Wire as shown here to match the code (A1=Temp, A2=Moisture, A3=Light).</li>
+                <li><strong>Enable I2C on the Pi.</strong> Run <code>sudo raspi-config</code> → Interface Options → I2C → Enable. Also disable Serial.</li>
+                <li><strong>Double-check pin numbers!</strong> The Pi Zero uses the same 40-pin header as the Pi 4, but some tutorials reference the Pi 4 specifically.</li>
+                <li><strong>Test sensors individually first.</strong> Use <code>calibration.py</code> to verify each sensor works before final assembly.</li>
+            </ul>
+        </div>
+
+        <footer style="text-align: center; padding: 40px; color: #666;">
+            <p>Fyto Project - Wiring Diagram</p>
+            <p style="font-size: 0.8rem;">Based on the <a href="https://www.instructables.com/Fyt%C3%B3-Turn-Your-Plant-Into-Pet/" style="color: #7c3aed;">Instructables tutorial</a> with community corrections</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleFullscreen() {
+            const icon = document.getElementById('fullscreen-icon');
+            const text = document.getElementById('fullscreen-text');
+
+            if (!document.fullscreenElement && !document.webkitFullscreenElement &&
+                !document.mozFullScreenElement && !document.msFullscreenElement) {
+                // Enter fullscreen
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.mozRequestFullScreen) {
+                    document.documentElement.mozRequestFullScreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                icon.textContent = '⛶';
+                text.textContent = 'Exit Fullscreen';
+            } else {
+                // Exit fullscreen
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                icon.textContent = '⛶';
+                text.textContent = 'Fullscreen';
+            }
+        }
+
+        // Update button text when fullscreen state changes (e.g., via ESC key)
+        document.addEventListener('fullscreenchange', updateFullscreenButton);
+        document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
+        document.addEventListener('mozfullscreenchange', updateFullscreenButton);
+        document.addEventListener('msfullscreenchange', updateFullscreenButton);
+
+        function updateFullscreenButton() {
+            const icon = document.getElementById('fullscreen-icon');
+            const text = document.getElementById('fullscreen-text');
+
+            if (document.fullscreenElement || document.webkitFullscreenElement ||
+                document.mozFullScreenElement || document.msFullscreenElement) {
+                icon.textContent = '⛶';
+                text.textContent = 'Exit Fullscreen';
+            } else {
+                icon.textContent = '⛶';
+                text.textContent = 'Fullscreen';
+            }
+        }
+    </script>
+</body>
+</html>

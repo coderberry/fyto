@@ -1,0 +1,4 @@
+.DS_Store
+.myp-workbench/
+.mypy_cache/
+.claude/

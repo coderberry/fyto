@@ -1,0 +1,20 @@
+# GitHub Pages Configuration for Fyto
+
+# Theme (using none since we have custom HTML)
+theme: null
+
+# Exclude files from site build
+exclude:
+  - generate_schematic.py
+  - "*.pyc"
+  - __pycache__
+
+# Include SVG and other assets
+include:
+  - diagrams
+
+# Site settings
+title: "Fyto - Turn Your Plant Into a Pet"
+description: "An interactive plant monitor that displays emotions based on environmental sensors"
+url: "https://github.com/CodersCafeTech/Fyto"
+author: "Coders Cafe"
